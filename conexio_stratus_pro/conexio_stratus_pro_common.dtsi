@@ -22,18 +22,6 @@
 			gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
 			label = "Green LED 1";
 		};
-		led1: led_1 {
-			gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
-			label = "Green LED 2";
-		};
-		led2: led_2 {
-			gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
-			label = "Green LED 3";
-		};
-		led3: led_3 {
-			gpios = <&gpio0 5 GPIO_ACTIVE_HIGH>;
-			label = "Green LED 4";
-		};
 	};
 
 	buttons {
@@ -43,27 +31,6 @@
 			label = "Push button 1";
 			zephyr,code = <INPUT_KEY_0>;
 		};
-		button1: button_1 {
-			gpios = <&gpio0 9 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
-			label = "Push button 2";
-			zephyr,code = <INPUT_KEY_1>;
-		};
-		button2: button_2 {
-			gpios = <&gpio0 18 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
-			label = "Push button 3";
-			zephyr,code = <INPUT_KEY_2>;
-		};
-		button3: button_3 {
-			gpios = <&gpio0 19 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
-			label = "Push button 4";
-			zephyr,code = <INPUT_KEY_3>;
-		};
-	};
-
-	nrf5340_reset: gpio-reset {
-		compatible = "nordic,nrf9161dk-nrf5340-reset";
-		status = "disabled";
-		gpios = <&gpio0 21 GPIO_ACTIVE_LOW>;
 	};
 
 	feather_header: feather_connector {
@@ -98,13 +65,7 @@
 	/* These aliases are provided for compatibility with samples */
 	aliases {
 		led0 = &led0;
-		led1 = &led1;
-		led2 = &led2;
-		led3 = &led3;
 		sw0 = &button0;
-		sw1 = &button1;
-		sw2 = &button2;
-		sw3 = &button3;
 		bootloader-led0 = &led0;
 		mcuboot-button0 = &button0;
 		mcuboot-led0 = &led0;
@@ -147,16 +108,6 @@
 	pinctrl-1 = <&i2c2_sleep>;
 	pinctrl-names = "default", "sleep";
 	clock-frequency = <I2C_BITRATE_FAST>;
-
-	pcal6408a: pcal6408a@21 {
-		compatible = "nxp,pcal6408a";
-		status = "disabled";
-		reg = <0x21>;
-		gpio-controller;
-		#gpio-cells = <2>;
-		ngpios = <8>;
-		int-gpios = <&gpio0 19 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
-	};
 };
 
 &pwm0 {
