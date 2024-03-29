@@ -19,47 +19,53 @@
 	leds {
 		compatible = "gpio-leds";
 		led0: led_0 {
-			gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
-			label = "Green LED 1";
+			gpios = <&gpio0 25 GPIO_ACTIVE_HIGH>;
+			label = "LED";
 		};
 	};
 
 	buttons {
 		compatible = "gpio-keys";
 		button0: button_0 {
-			gpios = <&gpio0 8 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
-			label = "Push button 1";
+			gpios = <&gpio0 31 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "Mode button";
 			zephyr,code = <INPUT_KEY_0>;
 		};
 	};
 
-	feather_header: feather_connector {
-		compatible = "adafruit-feather-header";
+	stratus_header: connector {
+		compatible = "conexio-stratus-header";
 		#gpio-cells = <2>;
 		gpio-map-mask = <0xffffffff 0xffffffc0>;
 		gpio-map-pass-thru = <0 0x3f>;
-		gpio-map = <0 0 &gpio0 14 0>,	/* A0 */
-			   <1 0 &gpio0 15 0>,	/* A1 */
-			   <2 0 &gpio0 16 0>,	/* A2 */
-			   <3 0 &gpio0 17 0>,	/* A3 */
-			   <4 0 &gpio0 18 0>,	/* A4 */
-			   <5 0 &gpio0 19 0>,	/* A5 */
-			   <6 0 &gpio0 0 0>,	/* D0 */
-			   <7 0 &gpio0 1 0>,	/* D1 */
-			   <8 0 &gpio0 2 0>,	/* D2 */
-			   <9 0 &gpio0 3 0>,	/* D3 */
-			   <10 0 &gpio0 4 0>,	/* D4 */
-			   <11 0 &gpio0 5 0>,	/* D5 */
-			   <12 0 &gpio0 6 0>,	/* D6 */
-			   <13 0 &gpio0 7 0>,	/* D7 */
-			   <14 0 &gpio0 8 0>,	/* D8 */
-			   <15 0 &gpio0 9 0>,	/* D9 */
-			   <16 0 &gpio0 10 0>,	/* D10 */
-			   <17 0 &gpio0 11 0>,	/* D11 */
-			   <18 0 &gpio0 12 0>,	/* D12 */
-			   <19 0 &gpio0 13 0>,	/* D13 */
-			   <20 0 &gpio0 30 0>,	/* D14 */
-			   <21 0 &gpio0 31 0>;	/* D15 */
+		gpio-map = <0 0 &gpio0 13 0>,	/* A0 */
+			   <1 0 &gpio0 14 0>,	/* A1 */
+			   <2 0 &gpio0 15 0>,	/* A2 */
+			   <3 0 &gpio0 16 0>,	/* A3 */
+			   <4 0 &gpio0 17 0>,	/* A4 */
+			   <5 0 &gpio0 18 0>,	/* A5 */
+			   <6 0 &gpio0 19 0>,	/* SCK */
+			   <7 0 &gpio0 20 0>,	/* MOSI */
+			   <8 0 &gpio0 21 0>,	/* MISO */
+			   <9 0 &gpio0 22 0>,	/* D1 */
+			   <10 0 &gpio0 23 0>,	/* D2 */
+			   <11 0 &gpio0 24 0>,	/* D3 */
+			   <12 0 &gpio0 26 0>,	/* D4 */
+			   <13 0 &gpio0 27 0>,	/* RXD */
+			   <14 0 &gpio0 28 0>,	/* TXD */
+			   <15 0 &gpio0 0 0>,	/* D5 */
+			   <16 0 &gpio0 1 0>,	/* D6 */
+			   <17 0 &gpio0 2 0>,	/* D7 */
+			   <18 0 &gpio0 3 0>,	/* D8 */
+			   <19 0 &gpio0 4 0>,	/* D9 */
+			   <20 0 &gpio0 5 0>,	/* D10 */
+			   <21 0 &gpio0 6 0>,	/* D11 */
+			   <22 0 &gpio0 7 0>,	/* D12 */
+			   <23 0 &gpio0 8 0>,	/* D13 */
+			   <24 0 &gpio0 9 0>,	/* D14 */
+			   <25 0 &gpio0 10 0>,	/* D15 */
+			   <26 0 &gpio0 11 0>,	/* D16 */
+			   <27 0 &gpio0 12 0>;	/* D17 */
 	};
 
 	/* These aliases are provided for compatibility with samples */
@@ -70,6 +76,14 @@
 		mcuboot-button0 = &button0;
 		mcuboot-led0 = &led0;
 		watchdog0 = &wdt0;
+	};
+
+	sensor-pwr-ctrl {
+		compatible = "regulator-fixed-sync", "regulator-fixed";
+		label = "sensor-pwr-ctrl";
+		regulator-name = "sensor-pwr-ctrl";
+		enable-gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
+		regulator-boot-on;
 	};
 };
 
@@ -93,14 +107,6 @@
 	pinctrl-names = "default", "sleep";
 };
 
-&uart1 {
-	status = "okay";
-	current-speed = <115200>;
-	pinctrl-0 = <&uart1_default>;
-	pinctrl-1 = <&uart1_sleep>;
-	pinctrl-names = "default", "sleep";
-};
-
 &i2c2 {
 	compatible = "nordic,nrf-twim";
 	status = "okay";
@@ -108,20 +114,48 @@
 	pinctrl-1 = <&i2c2_sleep>;
 	pinctrl-names = "default", "sleep";
 	clock-frequency = <I2C_BITRATE_FAST>;
-};
 
-&pwm0 {
-	status = "okay";
-	pinctrl-0 = <&pwm0_default>;
-	pinctrl-1 = <&pwm0_sleep>;
-	pinctrl-names = "default", "sleep";
+	lis2dh: lis2dh@18 {
+		compatible = "st,lis2dh";
+		reg = <0x18>;
+		irq-gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>;
+		disconnect-sdo-sa0-pull-up;
+	};
+
+	pmic_main: npm1300@6b {
+		compatible = "nordic,npm1300";
+		reg = <0x6b>;
+		pmic_charger: charger {
+			compatible = "nordic,npm1300-charger";
+			term-microvolt = <4150000>;
+			term-warm-microvolt = <4000000>;
+			current-microamp = <150000>;
+			dischg-limit-microamp = <1000000>;
+			vbus-limit-microamp = <500000>;
+			thermistor-ohms = <10000>;
+			thermistor-beta = <3380>;
+			charging-enable;
+		};
+		regulators {
+			compatible = "nordic,npm1300-regulator";
+			BUCK1 {
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+				regulator-boot-on;
+			};
+			BUCK2 {
+				regulator-min-microvolt = <3300000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-boot-on;
+			};
+		};
+	};
 };
 
 &spi3 {
 	compatible = "nordic,nrf-spim";
 	status = "okay";
-	cs-gpios = <&feather_header 16 GPIO_ACTIVE_LOW>, /* D10 */
-		   <&gpio0 20 GPIO_ACTIVE_LOW>;
+	cs-gpios = <&stratus_header 16 GPIO_ACTIVE_LOW>; /* D1 */
 	pinctrl-0 = <&spi3_default>;
 	pinctrl-1 = <&spi3_sleep>;
 	pinctrl-names = "default", "sleep";
