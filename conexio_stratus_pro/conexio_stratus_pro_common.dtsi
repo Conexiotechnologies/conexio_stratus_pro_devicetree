@@ -79,8 +79,7 @@
 	};
 
 	sensor-pwr-ctrl {
-		compatible = "regulator-fixed-sync", "regulator-fixed";
-		label = "sensor-pwr-ctrl";
+		compatible = "regulator-fixed";
 		regulator-name = "sensor-pwr-ctrl";
 		enable-gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
 		regulator-boot-on;
