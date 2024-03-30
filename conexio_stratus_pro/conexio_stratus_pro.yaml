@@ -1,5 +1,5 @@
 identifier: conexio_stratus_pro
-name: CONEXIO_STRATUS_PRO
+name: CONEXIO-STRATUS-PRO
 type: mcu
 arch: arm
 toolchain:
@@ -9,7 +9,11 @@ toolchain:
 ram: 88
 flash: 1024
 supported:
+  - gpio
   - i2c
+  - serial
+  - spi
   - pwm
   - watchdog
   - counter
+vendor: nordic
