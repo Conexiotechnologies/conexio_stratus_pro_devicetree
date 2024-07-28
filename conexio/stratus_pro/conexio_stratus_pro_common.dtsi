@@ -71,7 +71,7 @@
 			   <22 0 &gpio0 22 0>,	/* D22/CS */
 			   <23 0 &gpio0 23 0>,	/* D23 */
 			   <24 0 &gpio0 24 0>,	/* D24 */
-			   /* 25 not connected */
+			   /* 25 internally connected */
 			   <26 0 &gpio0 26 0>,	/* D26 */
 			   <27 0 &gpio0 27 0>,	/* D27/RX */
 			   <28 0 &gpio0 28 0>;	/* D28/TX */
