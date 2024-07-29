@@ -27,9 +27,6 @@ config FLASH_LOAD_SIZE
 
 if BOARD_CONEXIO_STRATUS_PRO_NRF9161_NS
 
-config BOOTLOADER_MCUBOOT
-	default y if !MCUBOOT
-
 config FLASH_LOAD_OFFSET
 	default $(dt_chosen_reg_addr_hex,$(DT_CHOSEN_Z_CODE_PARTITION))
 
