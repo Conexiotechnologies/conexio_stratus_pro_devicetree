@@ -9,7 +9,7 @@ hardware available on its supported Boards, as well as that hardware’s initial
 # Fetching Conexio Stratus Pro Board Definition Files
 
 Since the Conexio Stratus Pro board definition files are not included in the Zephyr mainstream, developers are asked to directly download the 
-board files in zip format, extract/unzip, and copy the conexio folder and place it in the NCS directory:
+board files in zip format, extract/unzip, and copy the conexio devicetree folder and place it in the NCS directory:
 ```
 ncs/v2.7.0/zephyr/boards
 ```
